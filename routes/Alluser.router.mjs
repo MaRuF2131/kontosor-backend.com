@@ -1,30 +1,26 @@
 
 import express from "express";
-import { AllUserController } from "./Alluser.controller.mjs";
-import { validateRequest } from "../middlewares/validate.middleware.mjs";
+import { AllUserController } from "../controllers/Alluser.controller.mjs";
 
-import {
+
+/* import {
   idParamRules,
   listContestRules
-} from "../validationRules/Alluser.rules.validation.mjs";
-import verifyJWT from "../middlewares/auth.middleware.mjs";
+} from "../validationRules/Alluser.rules.validation.mjs"; */
 
 const router = express.Router();
-//middleware to protect routes
-router.use(verifyJWT);
 
-
-// LIST ROOM + PAGINATION
+// LIST + PAGINATION
 router.get(
-  "/get",
-  validateRequest(listContestRules),
+  "/news",
+  /* validateRequest(listContestRules), */
   AllUserController.list
 );
-router.get(
+/* router.get(
   "/get/single/:id",
   validateRequest(idParamRules),
   AllUserController.getSigle
-);
+); */
 
 
 export default router;

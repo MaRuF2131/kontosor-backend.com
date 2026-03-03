@@ -1,15 +1,21 @@
-import { ObjectId } from "mongodb";
-import mongo from "../../MongoDB.mjs";
+import mongo from "../config/MongoDB.mjs";
 
 export const AllUserservice ={
-    async getContest(filter,srt,pagination){
+    async getNews(filter,srt,pagination){
         try{
            const skip = (parseInt(pagination?.page) - 1) * parseInt(pagination?.limit);
            const db=await mongo();
-           filter.status='Confirmed'
-           const [data,total]=await Promise.all([
-            await db.collection("contests").find(filter).skip(skip).limit(parseInt(pagination?.limit)).sort({...srt,createdAt:-1}).toArray(),
-            await db.collection("contests").countDocuments(filter),
+           const databaseName=filter.database;
+           filter.status="published";
+           if(!databaseName){
+            throw new Error("Database name is required in filter");
+           }
+           delete filter.database;
+           console.log("filter",filter);
+           
+           const [data,total]= await Promise.all([
+              db.collection(databaseName).find(filter).skip(skip).limit(parseInt(pagination?.limit)).sort({...srt}).toArray(),
+              db.collection(databaseName).countDocuments(filter)
            ])
 
             return {
@@ -26,7 +32,8 @@ export const AllUserservice ={
             throw error
         }
     },
-    async getById(id){
+
+/*     async getById(id){
         try {
             const db=await mongo();
             const result= await db.collection("contests").findOne({_id:new ObjectId(id)}); 
@@ -37,6 +44,6 @@ export const AllUserservice ={
         } catch (error) {
             throw error
         }
-    }
+    } */
 };
 

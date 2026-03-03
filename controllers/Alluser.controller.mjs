@@ -1,62 +1,46 @@
-import { AllUserservice } from "../services/Alluser.service.mjs";
+import {AllUserservice} from "../services/Alluser.service.mjs";
 
 export const AllUserController = {
   // List / Paginated 
   async list(req, res) {
     try {
-      const { status:tranding, type,search, page, limit } = req.query;
+      const {  id,database,category,subcategory,division,distic,upozila, page, limit } = req.query;
       const filter={}
-      let srt={};
-      const allowedTranding = [
-        "populer",
-        "latest",
-        "most prize",
-        "low entry fee",
-        "all",
-      ];
+      console.log("qurey",database);
       
-      if (!allowedTranding.includes(tranding)) {
-        return res.status(400).json({ message: "Invalid trending value" });
+      if(id) filter._id=id;
+      if(database){
+        filter.database=database
+      }else{
+        res.status(400).json({message:"Database is required"})
+        return;
       }
-      if(type !='all'){
-        filter.type=type
-      }
-      if(tranding =='populer'){
-         srt={prizeMoney:-1,participants:-1,price:1}
-      }
-      if(tranding =='most prize'){
-         srt={prizeMoney:-1}
-      }
-      if(tranding =='low entry fee'){
-         srt={price:1}
-      }
-      if(tranding =='latest'){
-         srt={createdAt:-1}
-      }
-      if(search !=''){
-      filter.$or = [
-        { name: { $regex: search, $options: 'i' } },
-        { type: { $regex: search, $options: 'i' } },
-      ]
-      }
-      const contest = await AllUserservice.getContest(
+      if(category) filter.category=category.normalize("NFC");
+      if(subcategory) filter.subcategory=subcategory.normalize("NFC");
+         
+      if(division) filter.division=division.normalize("NFC");
+      if(distic) filter.distic=distic.normalize("NFC");
+      if(upozila) filter.upozila=upozila.normalize("NFC");
+      const srt={createdAt:-1}
+      const news = await AllUserservice.getNews(
        filter,
        srt,
        {
         page,
-        limit
+        limit,
        }
       );
 
-      res.status(201).json(contest);
+      res.status(201).json(news);
     } catch (error) {
       console.log(error);
       res
         .status(500)
-        .json({ message: "Failed to fetch contest", error });
+        .json({ message: "Failed to fetch news", error });
     }
   },
-  async getSigle(req,res){
+
+/*   async getSigle(req,res){
       try {
           const {id} =req.params;
           console.log("id",id);
@@ -71,5 +55,5 @@ export const AllUserController = {
           .status(500)
           .json({ message: "Failed to fetch contest", error });
       }
-  }
+  } */
 };

@@ -23,7 +23,6 @@ export const newsRules = {
   ],
 
   subcategory: [
-    [(v) => isRequired(v), "Subcategory is required"],
     [(v) => v === undefined || v === "" || DangerousContentCheck(v, 2, 100), "Subcategory contains invalid content"],
   ],
 
@@ -48,11 +47,6 @@ export const newsRules = {
     division: [
       [
         (v, data) =>
-          data.locationType === "bangladesh" ? isRequired(v) : true,
-        "Division is required for Bangladesh news",
-      ],
-      [
-        (v, data) =>
           data.locationType !== "world" || DangerousContentCheck(v, 2, 100),
         "Division must be valid text",
       ],
@@ -61,22 +55,12 @@ export const newsRules = {
     district: [
       [
         (v, data) =>
-          data.locationType === "bangladesh" ? isRequired(v) : true,
-        "District is required for Bangladesh news",
-      ],
-      [
-        (v, data) =>
           data.locationType !== "world" || DangerousContentCheck(v, 2, 100),
         "District must be valid text",
       ],
     ],
 
     upazila: [
-      [
-        (v, data) =>
-          data.locationType === "bangladesh" ? isRequired(v) : true,
-        "Upazila is required for Bangladesh news",
-      ],
       [
         (v, data) =>
           data.locationType !== "world" || DangerousContentCheck(v, 2, 100),

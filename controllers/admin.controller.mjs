@@ -23,17 +23,17 @@ export const adminController = {
         const info = {
         breaking,
         status,
-        imageBy,
-        upazila,
-        district,
-        division,
-        country,
-        locationType,
-        subcategory,
-        category,
+        imageBy:imageBy.normalize("NFC"),
+        upazila:upazila.normalize("NFC"),
+        district:district.normalize("NFC"),
+        division:division.normalize("NFC"),
+        country:country.normalize("NFC"),
+        locationType:locationType.normalize("NFC"),
+        subcategory:subcategory.normalize("NFC"),
+        category:category.normalize("NFC"),
         description,
-        title,
-        reporter,
+        title:title.normalize("NFC"),
+        reporter:reporter.normalize("NFC"),
         createdAt: new Date(),
       };
       if (req.imageData && req.imageData.secure_url) {
@@ -45,6 +45,76 @@ export const adminController = {
       const news = await adminservice.createNews({
        ...info
       });
+
+    const categories = {
+      রাজনীতি: ["জাতীয়", "আন্তর্জাতিক"],
+      খেলা: ["ক্রিকেট","ফুটবল","অন্যান্য"],
+      বিনোদন: ["বলিউড","ঢালিউড","টালিউড","হলিউড","ওটিটি","নাটক","গান","অন্যান্য"],
+      বাণিজ্য:[],
+      শিক্ষা:["ক্যাম্পাস","ভর্তি","পরীক্ষা","ফলাফল","অন্যান্য"],
+      জাতীয়:[],
+      নির্বাচন:[],
+      লাইফস্টাইল:[],
+      আইন_আদালত:[],
+      অপরাধ:[],
+      স্বাস্থ্য:[],
+      ধর্ম:[],
+      রাজধানী:[],
+      শিল্প_সাহিত্য:[],
+      প্রবাস:[],
+      প্রযুক্তি:[],
+      চাকরি:[],
+      প্রযুক্তি:[],
+      নারী_শিশু:[],
+      বিচিত্র:[],
+      কর্পোরেট:[],
+      পরিবেশ_জলবায়ু:[],
+      রম্যবেলা:[],
+
+    };
+
+    for (const categoryName in categories) {
+
+      const subCategories = categories[categoryName];
+
+      // -------------------------
+      // যদি sub-category থাকে
+      // -------------------------
+      if (subCategories.length > 0) {
+
+        for (const sub of subCategories) {
+
+          for (let i = 0; i < 10; i++) {
+
+            await adminservice.createNews({
+              ...info,
+              category: categoryName.normalize("NFC"),
+              subcategory: sub.normalize("NFC"),
+              title: `${info.title} ${categoryName} ${sub} ${i + 1}`,
+            });
+
+          }
+        }
+
+      } 
+      // -------------------------
+      // যদি sub-category না থাকে
+      // -------------------------
+      else {
+
+        for (let i = 0; i < 10; i++) {
+
+          await adminservice.createNews({
+            ...info,
+            category: categoryName.normalize("NFC"),
+            subcategory: "",
+            title: `${info.title} ${categoryName} ${i + 1}`,
+          });
+
+        }
+
+      }
+    }
 
       res.status(201).json({
         success:true,
