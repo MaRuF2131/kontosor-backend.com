@@ -151,12 +151,12 @@ export const adminController = {
              ...info
       });
 
-      for(let i=0;i<30;i++){
+/*       for(let i=0;i<30;i++){
           const video = await adminservice.createVideo({
              ...info,
              title:info.title+i
           });
-      }
+      } */
 
       res.status(201).json({
         success:true,
