@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb";
 import {AllUserservice} from "../services/Alluser.service.mjs";
 
 export const AllUserController = {
@@ -8,7 +9,7 @@ export const AllUserController = {
       const filter={}
       console.log("qurey",database);
       
-      if(id) filter._id=id;
+      if(id) filter._id=new ObjectId(id);
       if(database){
         filter.database=database
       }else{
