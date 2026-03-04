@@ -46,7 +46,7 @@ export const adminController = {
        ...info
       });
 
-    const categories = {
+ /*     const categories = {
       রাজনীতি: ["জাতীয়", "আন্তর্জাতিক"],
       খেলা: ["ক্রিকেট","ফুটবল","অন্যান্য"],
       বিনোদন: ["বলিউড","ঢালিউড","টালিউড","হলিউড","ওটিটি","নাটক","গান","অন্যান্য"],
@@ -114,7 +114,7 @@ export const adminController = {
         }
 
       }
-    }
+    } */
 
       res.status(201).json({
         success:true,
@@ -146,9 +146,17 @@ export const adminController = {
         youtubeUrl,
         createdAt: new Date(),
       };
+
       const video = await adminservice.createVideo({
-       ...info
+             ...info
       });
+
+      for(let i=0;i<30;i++){
+          const video = await adminservice.createVideo({
+             ...info,
+             title:info.title+i
+          });
+      }
 
       res.status(201).json({
         success:true,
